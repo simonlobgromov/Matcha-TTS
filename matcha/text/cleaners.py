@@ -96,11 +96,9 @@ def transliteration_cleaners(text):
     return text
 
 
-def english_cleaners2(text):
+def kyrgyz_cleaners(text):
     """Pipeline for English text, including abbreviation expansion. + punctuation + stress"""
-    text = convert_to_ascii(text)
     text = lowercase(text)
-
     phonemes = global_phonemizer.phonemize([text], strip=True, njobs=1)[0]
     phonemes = collapse_whitespace(phonemes)
     return phonemes
