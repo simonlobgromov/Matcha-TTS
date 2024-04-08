@@ -5,7 +5,7 @@ valid_filelist_path: /content/kany_dataset/kany_filelist_test.txt
 batch_size: 16
 num_workers: 20
 pin_memory: True
-cleaners: [english_cleaners2]
+cleaners: [kyrgyz_cleaners]
 add_blank: True
 n_spks: 1
 n_fft: 1024
