@@ -2,7 +2,7 @@ _target_: lightning.pytorch.trainer.Trainer
 
 default_root_dir: ${paths.output_dir}
 
-max_epochs: 100
+max_epochs: 120
 
 accelerator: gpu
 devices: [0]
