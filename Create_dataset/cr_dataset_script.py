@@ -52,10 +52,12 @@ def main()->None:
     for ind in range(num_shards):
       dataset_shard = dataset_kany['train'].shard(num_shards=num_shards, index=ind)
       pbar.update(1)
-      for row in dataset_shard:
-        load_audio(row['audio'])
-        path.append(row['audio']['path'])
-        text.append(row['raw_transcription'])
+      with tqdm(total=len(dataset_shard), leave=False) as pbar2:
+        for row in dataset_shard:
+          load_audio(row['audio'])
+          path.append(row['audio']['path'])
+          text.append(row['raw_transcription'])
+          pbar2.update(1)
   
   absolute_path = os.path.abspath('../Matcha-TTS/kany_dataset')
   os.chdir(absolute_path)
