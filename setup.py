@@ -38,8 +38,10 @@ setup(
             "matcha-data-stats=matcha.utils.generate_data_statistics:main",
             "matcha-tts=matcha.cli:cli",
             "matcha-tts-app=matcha.app:main",
+            "create-dataset=Create_dataset.cr_dataset_script"
         ]
     },
     ext_modules=cythonize(exts, language_level=3),
     python_requires=">=3.9.0",
 )
+
