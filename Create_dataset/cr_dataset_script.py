@@ -73,12 +73,12 @@ def main()->None:
   text = []
   print()
   print('--- CONVERTIND AND SAVING THE TEST DATASET ---')
-  with tqdm(total=len(dataset_kany['test']), leave=False) as pbar:
+  with tqdm(total=len(dataset_kany['test']), leave=False) as pbar2:
     for row in tqdm(dataset_kany['test']):
       load_audio(row['audio'])
       path.append(row['audio']['path'])
       text.append(row['raw_transcription'])
-      pbar.update(1)
+      pbar2.update(1)
   
   os.chdir(absolute_path)
   df = pd.DataFrame({'path':path, 'text':text})
