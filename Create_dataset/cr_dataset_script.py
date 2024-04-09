@@ -28,6 +28,16 @@ def main(data_rep)->None:
   os.chdir('kany_dataset')
   os.mkdir('wavs')
   os.chdir('wavs')
+
+
+  art = """
+            /\_/\ 
+           ( o.o ) 
+            > ^ <
+
+      V   O   I   C    E
+  """
+  print(art)
   
   print('--- LOADING DATASET ---')
   dataset_kany = load_dataset(data_rep)
