@@ -42,7 +42,7 @@ def main()->None:
       path.append(row['audio']['path'])
       text.append(row['raw_transcription'])
   
-  absolute_path = os.path.abspath('../Matcha/kany_dataset')
+  absolute_path = os.path.abspath('../Matcha-TTS/kany_dataset')
   os.chdir(absolute_path)
   
   dir = f'{absolute_path}/wavs/'
@@ -69,8 +69,8 @@ def main()->None:
   print('--- THE DATASET IS READY ---')
   print(f'Dir of data is "{absolute_path}"')
   
-  absolute_path = os.path.abspath('../Matcha')
-  os.chdir(absolute_path)
+  absolute_path_home = os.path.abspath('../Matcha-TTS')
+  os.chdir(absolute_path_home)
 
 if __name__ == "__main__":
     main()
