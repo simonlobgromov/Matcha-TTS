@@ -48,17 +48,17 @@ def main()->None:
   path = []
   text = []
 
-  with tqdm(total=num_shards, leave=False) as pbar:
+  with tqdm(total=len(dataset_kany['train']), leave=False) as pbar:
     for ind in range(num_shards):
       dataset_shard = dataset_kany['train'].shard(num_shards=num_shards, index=ind)
-      pbar.update(1)
       for row in dataset_shard:
         load_audio(row['audio'])
         path.append(row['audio']['path'])
         text.append(row['raw_transcription'])
+        pbar.update(1)
 
   
-  absolute_path = os.path.abspath('../Matcha-TTS/kany_dataset')
+  absolute_path = os.path.abspath('../')
   os.chdir(absolute_path)
   
   dir = f'{absolute_path}/wavs/'
@@ -73,10 +73,12 @@ def main()->None:
   text = []
   print()
   print('--- CONVERTIND AND SAVING THE TEST DATASET ---')
-  for row in tqdm(dataset_kany['test']):
-    load_audio(row['audio'])
-    path.append(row['audio']['path'])
-    text.append(row['raw_transcription'])
+  with tqdm(total=len(dataset_kany['test']), leave=False) as pbar:
+    for row in tqdm(dataset_kany['test']):
+      load_audio(row['audio'])
+      path.append(row['audio']['path'])
+      text.append(row['raw_transcription'])
+      pbar.update(1)
   
   os.chdir(absolute_path)
   df = pd.DataFrame({'path':path, 'text':text})
@@ -87,7 +89,7 @@ def main()->None:
   print('--- THE DATASET IS READY ---')
   print(f'Dir of data is "{absolute_path}"')
   
-  absolute_path_home = os.path.abspath('../Matcha-TTS')
+  absolute_path_home = os.path.abspath('../')
   os.chdir(absolute_path_home)
 
 
