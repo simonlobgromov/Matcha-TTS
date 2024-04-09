@@ -8,7 +8,7 @@ import librosa
 from tqdm import tqdm
 import re
 import os
-import argparse
+
 
 
 def load_audio(audio_dict:dict)->None:
@@ -23,7 +23,7 @@ def load_audio(audio_dict:dict)->None:
 def remove_outer_quotes_regex(sen:str)->str:
   return re.sub(r'^["\'](.*)["\']$', r'\1', sen)
 
-def main(data_rep)->None:
+def main()->None:
   os.mkdir('kany_dataset')
   os.chdir('kany_dataset')
   os.mkdir('wavs')
@@ -40,7 +40,7 @@ def main(data_rep)->None:
   print(art)
   
   print('--- LOADING DATASET ---')
-  dataset_kany = load_dataset(data_rep)
+  dataset_kany = load_dataset("Simonlob/Kany_dataset_mk4")
   
   # mk TRAIN
   print()
@@ -89,7 +89,4 @@ def main(data_rep)->None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--data_rep", type=str, help="HF-Dataset representation in format 'author/dataset_name'")
-    args = parser.parse_args()
-    main(args.data_rep)
+  main()
