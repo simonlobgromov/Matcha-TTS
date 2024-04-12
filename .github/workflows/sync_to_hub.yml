@@ -17,4 +17,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{secrets.HF_TOKEN}}
-        run: git push https://Simonlob:$HF_TOKEN@huggingface.co/spaces/Simonlob/Akulai-Matcha-TTS main
+        run: git push https://Simonlob:$HF_TOKEN@huggingface.co/spaces/Simonlob/Akylai-Matcha-TTS main
