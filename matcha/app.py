@@ -21,9 +21,9 @@ from matcha.utils.utils import get_user_data_dir, plot_tensor
 LOCATION = Path(get_user_data_dir())
 
 args = Namespace(
-    cpu=False,
-    model="matcha_vctk",
-    vocoder="hifigan_univ_v1",
+    cpu=True,
+    model="akyl_ai",
+    vocoder="hifigan_T2_v1",
     spk=0,
 )
 
@@ -40,21 +40,17 @@ def VOCODER_LOC(x):
 
 LOGO_URL = "https://shivammehta25.github.io/Matcha-TTS/images/logo.png"
 RADIO_OPTIONS = {
-    "Multi Speaker (VCTK)": {
-        "model": "matcha_vctk",
-        "vocoder": "hifigan_univ_v1",
-    },
-    "Single Speaker (LJ Speech)": {
-        "model": "matcha_ljspeech",
+    
+    "Single Speaker (Kany)": {
+        "model": "akyl_ai",
         "vocoder": "hifigan_T2_v1",
     },
 }
 
 # Ensure all the required models are downloaded
-assert_model_downloaded(MATCHA_TTS_LOC("matcha_ljspeech"), MATCHA_URLS["matcha_ljspeech"])
+assert_model_downloaded(MATCHA_TTS_LOC("akyl_ai"), MATCHA_URLS["akyl_ai"])
 assert_model_downloaded(VOCODER_LOC("hifigan_T2_v1"), VOCODER_URLS["hifigan_T2_v1"])
-assert_model_downloaded(MATCHA_TTS_LOC("matcha_vctk"), MATCHA_URLS["matcha_vctk"])
-assert_model_downloaded(VOCODER_LOC("hifigan_univ_v1"), VOCODER_URLS["hifigan_univ_v1"])
+
 
 device = get_device(args)
 
@@ -77,7 +73,7 @@ def load_model_ui(model_type, textbox):
         model, vocoder, denoiser = load_model(model_name, vocoder_name)
         CURRENTLY_LOADED_MODEL = model_name
 
-    if model_name == "matcha_ljspeech":
+    if model_name == "akyl_ai":
         spk_slider = gr.update(visible=False, value=-1)
         single_speaker_examples = gr.update(visible=True)
         multi_speaker_examples = gr.update(visible=False)
@@ -134,12 +130,12 @@ def multispeaker_example_cacher(text, n_timesteps, mel_temp, length_scale, spk):
     return phones, audio, mel_spectrogram
 
 
-def ljspeech_example_cacher(text, n_timesteps, mel_temp, length_scale, spk=-1):
+def akyl_ai_example_cacher(text, n_timesteps, mel_temp, length_scale, spk=-1):
     global CURRENTLY_LOADED_MODEL  # pylint: disable=global-statement
-    if CURRENTLY_LOADED_MODEL != "matcha_ljspeech":
+    if CURRENTLY_LOADED_MODEL != "akyl_ai":
         global model, vocoder, denoiser  # pylint: disable=global-statement
-        model, vocoder, denoiser = load_model("matcha_ljspeech", "hifigan_T2_v1")
-        CURRENTLY_LOADED_MODEL = "matcha_ljspeech"
+        model, vocoder, denoiser = load_model("akyl_ai", "hifigan_T2_v1")
+        CURRENTLY_LOADED_MODEL = "akyl_ai"
 
     phones, text, text_lengths = process_text_gradio(text)
     audio, mel_spectrogram = synthesise_mel(text, text_lengths, n_timesteps, mel_temp, length_scale, spk)
@@ -253,32 +249,9 @@ def main():
                         0.677,
                         0.95,
                     ],
-                    [
-                        "The Secret Service believed that it was very doubtful that any President would ride regularly in a vehicle with a fixed top, even though transparent.",
-                        10,
-                        0.677,
-                        0.95,
-                    ],
-                    [
-                        "The Secret Service believed that it was very doubtful that any President would ride regularly in a vehicle with a fixed top, even though transparent.",
-                        50,
-                        0.677,
-                        0.95,
-                    ],
-                    [
-                        "The narrative of these events is based largely on the recollections of the participants.",
-                        10,
-                        0.677,
-                        0.95,
-                    ],
-                    [
-                        "The jury did not believe him, and the verdict was for the defendants.",
-                        10,
-                        0.677,
-                        0.95,
-                    ],
+                    
                 ],
-                fn=ljspeech_example_cacher,
+                fn=akyl_ai_example_cacher,
                 inputs=[text, n_timesteps, mel_temp, length_scale],
                 outputs=[phonetised_text, audio, mel_spectrogram],
                 cache_examples=True,
