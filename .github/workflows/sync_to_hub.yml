@@ -16,5 +16,5 @@ jobs:
           lfs: true
       - name: Push to hub
         env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push https://HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/HF_USERNAME/SPACE_NAME main
+          HF_TOKEN: ${{secrets.HF_TOKEN}}
+        run: git push https://Simonlob:$HF_TOKEN@huggingface.co/spaces/Simonlob/Akulai-Matcha-TTS main
