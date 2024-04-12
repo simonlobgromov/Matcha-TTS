@@ -51,3 +51,5 @@ datasets==2.18.0
 ipython==7.34.0
 librosa==0.10.1
 tqdm==4.66.2
+# ---- inference interface ---- #
+streamlit==1.33.0
