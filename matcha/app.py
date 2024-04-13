@@ -232,19 +232,19 @@ def main():
             examples = gr.Examples(  # pylint: disable=unused-variable
                 examples=[
                     [
-                        "We propose Matcha-TTS, a new approach to non-autoregressive neural TTS, that uses conditional flow matching (similar to rectified flows) to speed up O D E-based speech synthesis.",
+                        "Мага колдоо көрсөтүп, мени тандагандарга ыраазымын. Айыл үчүн иштейбиз, жол курабыз, асфальт төшөйбүз”, — деген ал.",
                         50,
                         0.677,
                         0.95,
                     ],
                     [
-                        "The Secret Service believed that it was very doubtful that any President would ride regularly in a vehicle with a fixed top, even though transparent.",
+                        "Урматтуу кардарлар. Учурда кызматтын иштешинде кыйынчылыктар аныкталып жатат, ошондуктан Эмбанк мобилдик тиркемесинде кээ бир операциялар убактылуу жеткиликсиз.",
                         2,
                         0.677,
                         0.95,
                     ],
                     [
-                        "The Secret Service believed that it was very doubtful that any President would ride regularly in a vehicle with a fixed top, even though transparent.",
+                        "Сенин атың ким?",
                         4,
                         0.677,
                         0.95,
@@ -257,56 +257,56 @@ def main():
                 cache_examples=True,
             )
 
-        with gr.Row() as example_row_multispeaker:
-            multi_speaker_examples = gr.Examples(  # pylint: disable=unused-variable
-                examples=[
-                    [
-                        "Hello everyone! I am speaker 0 and I am here to tell you that Matcha-TTS is amazing!",
-                        10,
-                        0.677,
-                        0.85,
-                        0,
-                    ],
-                    [
-                        "Hello everyone! I am speaker 16 and I am here to tell you that Matcha-TTS is amazing!",
-                        10,
-                        0.677,
-                        0.85,
-                        16,
-                    ],
-                    [
-                        "Hello everyone! I am speaker 44 and I am here to tell you that Matcha-TTS is amazing!",
-                        50,
-                        0.677,
-                        0.85,
-                        44,
-                    ],
-                    [
-                        "Hello everyone! I am speaker 45 and I am here to tell you that Matcha-TTS is amazing!",
-                        50,
-                        0.677,
-                        0.85,
-                        45,
-                    ],
-                    [
-                        "Hello everyone! I am speaker 58 and I am here to tell you that Matcha-TTS is amazing!",
-                        4,
-                        0.677,
-                        0.85,
-                        58,
-                    ],
-                ],
-                fn=multispeaker_example_cacher,
-                inputs=[text, n_timesteps, mel_temp, length_scale, spk_slider],
-                outputs=[phonetised_text, audio, mel_spectrogram],
-                cache_examples=True,
-                label="Multi Speaker Examples",
-            )
+        # with gr.Row() as example_row_multispeaker:
+        #     multi_speaker_examples = gr.Examples(  # pylint: disable=unused-variable
+        #         examples=[
+        #             [
+        #                 "Hello everyone! I am speaker 0 and I am here to tell you that Matcha-TTS is amazing!",
+        #                 10,
+        #                 0.677,
+        #                 0.85,
+        #                 0,
+        #             ],
+        #             [
+        #                 "Hello everyone! I am speaker 16 and I am here to tell you that Matcha-TTS is amazing!",
+        #                 10,
+        #                 0.677,
+        #                 0.85,
+        #                 16,
+        #             ],
+        #             [
+        #                 "Hello everyone! I am speaker 44 and I am here to tell you that Matcha-TTS is amazing!",
+        #                 50,
+        #                 0.677,
+        #                 0.85,
+        #                 44,
+        #             ],
+        #             [
+        #                 "Hello everyone! I am speaker 45 and I am here to tell you that Matcha-TTS is amazing!",
+        #                 50,
+        #                 0.677,
+        #                 0.85,
+        #                 45,
+        #             ],
+        #             [
+        #                 "Hello everyone! I am speaker 58 and I am here to tell you that Matcha-TTS is amazing!",
+        #                 4,
+        #                 0.677,
+        #                 0.85,
+        #                 58,
+        #             ],
+        #         ],
+        #         fn=multispeaker_example_cacher,
+        #         inputs=[text, n_timesteps, mel_temp, length_scale, spk_slider],
+        #         outputs=[phonetised_text, audio, mel_spectrogram],
+        #         cache_examples=True,
+        #         label="Multi Speaker Examples",
+        #     )
 
         model_type.change(lambda x: gr.update(interactive=False), inputs=[synth_btn], outputs=[synth_btn]).then(
             load_model_ui,
             inputs=[model_type, text],
-            outputs=[text, synth_btn, spk_slider, example_row_lj_speech, example_row_multispeaker, length_scale],
+            outputs=[text, synth_btn, spk_slider, example_row_lj_speech, length_scale],
         )
 
         synth_btn.click(
