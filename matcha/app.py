@@ -21,9 +21,9 @@ from matcha.utils.utils import get_user_data_dir, plot_tensor
 LOCATION = Path(get_user_data_dir())
 
 args = Namespace(
-    cpu=True,
-    model="akyl_ai",
-    vocoder="hifigan_T2_v1",
+    cpu=False,
+    model="matcha_vctk",
+    vocoder="hifigan_univ_v1",
     spk=0,
 )
 
@@ -40,8 +40,11 @@ def VOCODER_LOC(x):
 
 LOGO_URL = "https://shivammehta25.github.io/Matcha-TTS/images/logo.png"
 RADIO_OPTIONS = {
-    
-    "Single Speaker (Kany)": {
+    "Multi Speaker (VCTK)": {
+        "model": "matcha_vctk",
+        "vocoder": "hifigan_univ_v1",
+    },
+    "Single Speaker (LJ Speech)": {
         "model": "akyl_ai",
         "vocoder": "hifigan_T2_v1",
     },
@@ -50,7 +53,8 @@ RADIO_OPTIONS = {
 # Ensure all the required models are downloaded
 assert_model_downloaded(MATCHA_TTS_LOC("akyl_ai"), MATCHA_URLS["akyl_ai"])
 assert_model_downloaded(VOCODER_LOC("hifigan_T2_v1"), VOCODER_URLS["hifigan_T2_v1"])
-
+assert_model_downloaded(MATCHA_TTS_LOC("matcha_vctk"), MATCHA_URLS["matcha_vctk"])
+assert_model_downloaded(VOCODER_LOC("hifigan_univ_v1"), VOCODER_URLS["hifigan_univ_v1"])
 
 device = get_device(args)
 
@@ -73,7 +77,7 @@ def load_model_ui(model_type, textbox):
         model, vocoder, denoiser = load_model(model_name, vocoder_name)
         CURRENTLY_LOADED_MODEL = model_name
 
-    if model_name == "akyl_ai":
+    if model_name == "matcha_ljspeech":
         spk_slider = gr.update(visible=False, value=-1)
         single_speaker_examples = gr.update(visible=True)
         multi_speaker_examples = gr.update(visible=False)
@@ -130,7 +134,7 @@ def multispeaker_example_cacher(text, n_timesteps, mel_temp, length_scale, spk):
     return phones, audio, mel_spectrogram
 
 
-def akyl_ai_example_cacher(text, n_timesteps, mel_temp, length_scale, spk=-1):
+def ljspeech_example_cacher(text, n_timesteps, mel_temp, length_scale, spk=-1):
     global CURRENTLY_LOADED_MODEL  # pylint: disable=global-statement
     if CURRENTLY_LOADED_MODEL != "akyl_ai":
         global model, vocoder, denoiser  # pylint: disable=global-statement
@@ -232,81 +236,67 @@ def main():
             examples = gr.Examples(  # pylint: disable=unused-variable
                 examples=[
                     [
-                        "Мага колдоо көрсөтүп, мени тандагандарга ыраазымын. Айыл үчүн иштейбиз, жол курабыз, асфальт төшөйбүз”, — деген ал.",
+                        "We propose Matcha-TTS, a new approach to non-autoregressive neural TTS, that uses conditional flow matching (similar to rectified flows) to speed up O D E-based speech synthesis.",
                         50,
                         0.677,
                         0.95,
                     ],
                     [
-                        "Урматтуу кардарлар. Учурда кызматтын иштешинде кыйынчылыктар аныкталып жатат, ошондуктан Эмбанк мобилдик тиркемесинде кээ бир операциялар убактылуу жеткиликсиз.",
+                        "The Secret Service believed that it was very doubtful that any President would ride regularly in a vehicle with a fixed top, even though transparent.",
                         2,
                         0.677,
                         0.95,
                     ],
                     [
-                        "Сенин атың ким?",
+                        "The Secret Service believed that it was very doubtful that any President would ride regularly in a vehicle with a fixed top, even though transparent.",
                         4,
                         0.677,
                         0.95,
                     ],
-                    
+                    [
+                        "The Secret Service believed that it was very doubtful that any President would ride regularly in a vehicle with a fixed top, even though transparent.",
+                        10,
+                        0.677,
+                        0.95,
+                    ],
+                  
                 ],
-                fn=akyl_ai_example_cacher,
+                fn=ljspeech_example_cacher,
                 inputs=[text, n_timesteps, mel_temp, length_scale],
                 outputs=[phonetised_text, audio, mel_spectrogram],
                 cache_examples=True,
             )
 
-        # with gr.Row() as example_row_multispeaker:
-        #     multi_speaker_examples = gr.Examples(  # pylint: disable=unused-variable
-        #         examples=[
-        #             [
-        #                 "Hello everyone! I am speaker 0 and I am here to tell you that Matcha-TTS is amazing!",
-        #                 10,
-        #                 0.677,
-        #                 0.85,
-        #                 0,
-        #             ],
-        #             [
-        #                 "Hello everyone! I am speaker 16 and I am here to tell you that Matcha-TTS is amazing!",
-        #                 10,
-        #                 0.677,
-        #                 0.85,
-        #                 16,
-        #             ],
-        #             [
-        #                 "Hello everyone! I am speaker 44 and I am here to tell you that Matcha-TTS is amazing!",
-        #                 50,
-        #                 0.677,
-        #                 0.85,
-        #                 44,
-        #             ],
-        #             [
-        #                 "Hello everyone! I am speaker 45 and I am here to tell you that Matcha-TTS is amazing!",
-        #                 50,
-        #                 0.677,
-        #                 0.85,
-        #                 45,
-        #             ],
-        #             [
-        #                 "Hello everyone! I am speaker 58 and I am here to tell you that Matcha-TTS is amazing!",
-        #                 4,
-        #                 0.677,
-        #                 0.85,
-        #                 58,
-        #             ],
-        #         ],
-        #         fn=multispeaker_example_cacher,
-        #         inputs=[text, n_timesteps, mel_temp, length_scale, spk_slider],
-        #         outputs=[phonetised_text, audio, mel_spectrogram],
-        #         cache_examples=True,
-        #         label="Multi Speaker Examples",
-        #     )
+        with gr.Row() as example_row_multispeaker:
+            multi_speaker_examples = gr.Examples(  # pylint: disable=unused-variable
+                examples=[
+                    [
+                        "Hello everyone! I am speaker 0 and I am here to tell you that Matcha-TTS is amazing!",
+                        10,
+                        0.677,
+                        0.85,
+                        0,
+                    ],
+                    [
+                        "Hello everyone! I am speaker 16 and I am here to tell you that Matcha-TTS is amazing!",
+                        10,
+                        0.677,
+                        0.85,
+                        16,
+                    ],
+                    [
+                ],
+                fn=multispeaker_example_cacher,
+                inputs=[text, n_timesteps, mel_temp, length_scale, spk_slider],
+                outputs=[phonetised_text, audio, mel_spectrogram],
+                cache_examples=True,
+                label="Multi Speaker Examples",
+            )
 
         model_type.change(lambda x: gr.update(interactive=False), inputs=[synth_btn], outputs=[synth_btn]).then(
             load_model_ui,
             inputs=[model_type, text],
-            outputs=[text, synth_btn, spk_slider, example_row_lj_speech, length_scale],
+            outputs=[text, synth_btn, spk_slider, example_row_lj_speech, example_row_multispeaker, length_scale],
         )
 
         synth_btn.click(
