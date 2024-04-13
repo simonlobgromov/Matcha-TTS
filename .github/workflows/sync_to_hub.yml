@@ -24,7 +24,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git remote add huggingface https://Simonlob:$HF_TOKEN@huggingface.co/spaces/Simonlob/Akylai-Matcha-TTS
+          git remote add huggingface https://Simonlob:$HF_TOKEN@huggingface.co/spaces/Simonlob/akylai-tts-mini
           git fetch --all
           git reset --hard huggingface/main
           git push huggingface main --force
