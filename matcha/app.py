@@ -21,10 +21,9 @@ from matcha.utils.utils import get_user_data_dir, plot_tensor
 LOCATION = Path(get_user_data_dir())
 
 args = Namespace(
-    cpu=False,
-    model="matcha_vctk",
-    vocoder="hifigan_univ_v1",
-    spk=0,
+    cpu=True,
+    model="akyl_ai",
+    vocoder="hifigan_T2_v1",
 )
 
 CURRENTLY_LOADED_MODEL = args.model
@@ -38,13 +37,10 @@ def VOCODER_LOC(x):
     return LOCATION / f"{x}"
 
 
-LOGO_URL = "https://shivammehta25.github.io/Matcha-TTS/images/logo.png"
+LOGO_URL = "https://github.com/simonlobgromov/Matcha-TTS/blob/main/photo_2024-04-07_15-59-52.png"
 RADIO_OPTIONS = {
-    "Multi Speaker (VCTK)": {
-        "model": "matcha_vctk",
-        "vocoder": "hifigan_univ_v1",
-    },
-    "Single Speaker (LJ Speech)": {
+
+    "Akyl_AI": {
         "model": "akyl_ai",
         "vocoder": "hifigan_T2_v1",
     },
@@ -53,8 +49,7 @@ RADIO_OPTIONS = {
 # Ensure all the required models are downloaded
 assert_model_downloaded(MATCHA_TTS_LOC("akyl_ai"), MATCHA_URLS["akyl_ai"])
 assert_model_downloaded(VOCODER_LOC("hifigan_T2_v1"), VOCODER_URLS["hifigan_T2_v1"])
-assert_model_downloaded(MATCHA_TTS_LOC("matcha_vctk"), MATCHA_URLS["matcha_vctk"])
-assert_model_downloaded(VOCODER_LOC("hifigan_univ_v1"), VOCODER_URLS["hifigan_univ_v1"])
+
 
 device = get_device(args)
 
@@ -77,13 +72,11 @@ def load_model_ui(model_type, textbox):
         model, vocoder, denoiser = load_model(model_name, vocoder_name)
         CURRENTLY_LOADED_MODEL = model_name
 
-    if model_name == "matcha_ljspeech":
-        spk_slider = gr.update(visible=False, value=-1)
+    if model_name == "akyl_ai":
         single_speaker_examples = gr.update(visible=True)
         multi_speaker_examples = gr.update(visible=False)
         length_scale = gr.update(value=0.95)
     else:
-        spk_slider = gr.update(visible=True, value=0)
         single_speaker_examples = gr.update(visible=False)
         multi_speaker_examples = gr.update(visible=True)
         length_scale = gr.update(value=0.85)
@@ -91,7 +84,6 @@ def load_model_ui(model_type, textbox):
     return (
         textbox,
         gr.update(interactive=True),
-        spk_slider,
         single_speaker_examples,
         multi_speaker_examples,
         length_scale,
@@ -105,7 +97,7 @@ def process_text_gradio(text):
 
 
 @torch.inference_mode()
-def synthesise_mel(text, text_length, n_timesteps, temperature, length_scale, spk):
+def synthesise_mel(text, text_length, n_timesteps, temperature, length_scale, spk=-1):
     spk = torch.tensor([spk], device=device, dtype=torch.long) if spk >= 0 else None
     output = model.synthesise(
         text,
@@ -122,21 +114,9 @@ def synthesise_mel(text, text_length, n_timesteps, temperature, length_scale, sp
     return fp.name, plot_tensor(output["mel"].squeeze().cpu().numpy())
 
 
-def multispeaker_example_cacher(text, n_timesteps, mel_temp, length_scale, spk):
-    global CURRENTLY_LOADED_MODEL  # pylint: disable=global-statement
-    if CURRENTLY_LOADED_MODEL != "matcha_vctk":
-        global model, vocoder, denoiser  # pylint: disable=global-statement
-        model, vocoder, denoiser = load_model("matcha_vctk", "hifigan_univ_v1")
-        CURRENTLY_LOADED_MODEL = "matcha_vctk"
-
-    phones, text, text_lengths = process_text_gradio(text)
-    audio, mel_spectrogram = synthesise_mel(text, text_lengths, n_timesteps, mel_temp, length_scale, spk)
-    return phones, audio, mel_spectrogram
-
-
 def ljspeech_example_cacher(text, n_timesteps, mel_temp, length_scale, spk=-1):
     global CURRENTLY_LOADED_MODEL  # pylint: disable=global-statement
-    if CURRENTLY_LOADED_MODEL != "akyl_ai":
+    if CURRENTLY_LOADED_MODEL == "akyl_ai":
         global model, vocoder, denoiser  # pylint: disable=global-statement
         model, vocoder, denoiser = load_model("akyl_ai", "hifigan_T2_v1")
         CURRENTLY_LOADED_MODEL = "akyl_ai"
@@ -147,51 +127,46 @@ def ljspeech_example_cacher(text, n_timesteps, mel_temp, length_scale, spk=-1):
 
 
 def main():
-    description = """# 🍵 Matcha-TTS: A fast TTS architecture with conditional flow matching
-    ### [Shivam Mehta](https://www.kth.se/profile/smehta), [Ruibo Tu](https://www.kth.se/profile/ruibo), [Jonas Beskow](https://www.kth.se/profile/beskow), [Éva Székely](https://www.kth.se/profile/szekely), and [Gustav Eje Henter](https://people.kth.se/~ghe/)
-    We propose 🍵 Matcha-TTS, a new approach to non-autoregressive neural TTS, that uses conditional flow matching (similar to rectified flows) to speed up ODE-based speech synthesis. Our method:
+    description = """# AkylAI TTS mini
+    We present to you a fast speech synthesis model in the Kyrgyz language.
 
+    
+    This is a new approach to non-autoregressive neural TTS that uses conditional stream matching (similar to rectified streams) to speed up ODE-based speech synthesis.
+    Method:
 
     * Is probabilistic
     * Has compact memory footprint
     * Sounds highly natural
     * Is very fast to synthesise from
-
-
-    Check out our [demo page](https://shivammehta25.github.io/Matcha-TTS). Read our [arXiv preprint for more details](https://arxiv.org/abs/2309.03199).
-    Code is available in our [GitHub repository](https://github.com/shivammehta25/Matcha-TTS), along with pre-trained models.
-
-    Cached examples are available at the bottom of the page.
+   
     """
 
-    with gr.Blocks(title="🍵 Matcha-TTS: A fast TTS architecture with conditional flow matching") as demo:
+    with gr.Blocks(title="AkylAI TTS") as demo:
         processed_text = gr.State(value=None)
         processed_text_len = gr.State(value=None)
 
         with gr.Box():
-            with gr.Row():
-                gr.Markdown(description, scale=3)
-                with gr.Column():
-                    gr.Image(LOGO_URL, label="Matcha-TTS logo", height=50, width=50, scale=1, show_label=False)
-                    html = '<br><iframe width="560" height="315" src="https://www.youtube.com/embed/xmvJkz3bqw0?si=jN7ILyDsbPwJCGoa" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
-                    gr.HTML(html)
+          with gr.Row():
+              gr.Markdown(description, scale=3)
+              with gr.Column():
+                  image_url = "https://github.com/simonlobgromov/Matcha-TTS/blob/main/photo_2024-04-07_15-59-52.png?raw=true"
+                  gr.Image(image_url, label="Matcha-TTS logo", width=560, height=315)
 
         with gr.Box():
             radio_options = list(RADIO_OPTIONS.keys())
             model_type = gr.Radio(
-                radio_options, value=radio_options[0], label="Choose a Model", interactive=True, container=False
+                radio_options, value=radio_options[0], label="Choose a Model", interactive=True, container=False, visible=False,
             )
 
             with gr.Row():
-                gr.Markdown("# Text Input")
+                gr.Markdown("## Текстти кыргыз тилинде жазыңыз\n### Text Input")
             with gr.Row():
-                text = gr.Textbox(value="", lines=2, label="Text to synthesise", scale=3)
-                spk_slider = gr.Slider(
-                    minimum=0, maximum=107, step=1, value=args.spk, label="Speaker ID", interactive=True, scale=1
-                )
+                text = gr.Textbox(value="", lines=2, label=None, scale=3)
 
             with gr.Row():
-                gr.Markdown("### Hyper parameters")
+                gr.Markdown("## Сүйлөө ылдамдыгы\n### Speaking rate")
+                # gr.Markdown("")
+                
             with gr.Row():
                 n_timesteps = gr.Slider(
                     label="Number of ODE steps",
@@ -200,9 +175,10 @@ def main():
                     step=1,
                     value=10,
                     interactive=True,
+                    visible=False
                 )
                 length_scale = gr.Slider(
-                    label="Length scale (Speaking rate)",
+                    label=None,
                     minimum=0.5,
                     maximum=1.5,
                     step=0.05,
@@ -216,14 +192,16 @@ def main():
                     step=0.16675,
                     value=0.667,
                     interactive=True,
+                    visible=False
                 )
 
-                synth_btn = gr.Button("Synthesise")
+                synth_btn = gr.Button("БАШТОО | RUN")
 
         with gr.Box():
             with gr.Row():
-                gr.Markdown("### Phonetised text")
-                phonetised_text = gr.Textbox(interactive=False, scale=10, label="Phonetised text")
+                gr.Markdown("## Фонетизацияланган текст\n### Phonetised text")
+            with gr.Row():
+                phonetised_text = gr.Textbox(interactive=False, scale=10, label=None)
 
         with gr.Box():
             with gr.Row():
@@ -232,33 +210,22 @@ def main():
                 # with gr.Row():
                 audio = gr.Audio(interactive=False, label="Audio")
 
-        with gr.Row(visible=False) as example_row_lj_speech:
+        with gr.Row(visible=True) as example_row_lj_speech:
             examples = gr.Examples(  # pylint: disable=unused-variable
                 examples=[
                     [
-                        "We propose Matcha-TTS, a new approach to non-autoregressive neural TTS, that uses conditional flow matching (similar to rectified flows) to speed up O D E-based speech synthesis.",
+                        "Баарыңарга салам, менин атым Акылай. Мен бардыгын бул жерде Инновация борборунда көргөнүмө абдан кубанычтамын.",
                         50,
                         0.677,
                         0.95,
                     ],
                     [
-                        "The Secret Service believed that it was very doubtful that any President would ride regularly in a vehicle with a fixed top, even though transparent.",
+                        "Мага колдоо көрсөтүп, мени тандагандарга ыраазымын. Айыл үчүн иштейбиз, жол курабыз, асфальт төшөйбүз”, — деген ал.",
                         2,
                         0.677,
                         0.95,
                     ],
-                    [
-                        "The Secret Service believed that it was very doubtful that any President would ride regularly in a vehicle with a fixed top, even though transparent.",
-                        4,
-                        0.677,
-                        0.95,
-                    ],
-                    [
-                        "The Secret Service believed that it was very doubtful that any President would ride regularly in a vehicle with a fixed top, even though transparent.",
-                        10,
-                        0.677,
-                        0.95,
-                    ],
+ 
                   
                 ],
                 fn=ljspeech_example_cacher,
@@ -267,36 +234,11 @@ def main():
                 cache_examples=True,
             )
 
-        with gr.Row() as example_row_multispeaker:
-            multi_speaker_examples = gr.Examples(  # pylint: disable=unused-variable
-                examples=[
-                    [
-                        "Hello everyone! I am speaker 0 and I am here to tell you that Matcha-TTS is amazing!",
-                        10,
-                        0.677,
-                        0.85,
-                        0,
-                    ],
-                    [
-                        "Hello everyone! I am speaker 16 and I am here to tell you that Matcha-TTS is amazing!",
-                        10,
-                        0.677,
-                        0.85,
-                        16,
-                    ],
-                    [
-                ],
-                fn=multispeaker_example_cacher,
-                inputs=[text, n_timesteps, mel_temp, length_scale, spk_slider],
-                outputs=[phonetised_text, audio, mel_spectrogram],
-                cache_examples=True,
-                label="Multi Speaker Examples",
-            )
-
+      
         model_type.change(lambda x: gr.update(interactive=False), inputs=[synth_btn], outputs=[synth_btn]).then(
             load_model_ui,
             inputs=[model_type, text],
-            outputs=[text, synth_btn, spk_slider, example_row_lj_speech, example_row_multispeaker, length_scale],
+            outputs=[text, synth_btn, example_row_lj_speech, length_scale],
         )
 
         synth_btn.click(
@@ -309,7 +251,7 @@ def main():
             queue=True,
         ).then(
             fn=synthesise_mel,
-            inputs=[processed_text, processed_text_len, n_timesteps, mel_temp, length_scale, spk_slider],
+            inputs=[processed_text, processed_text_len, n_timesteps, mel_temp, length_scale],
             outputs=[audio, mel_spectrogram],
         )
 
