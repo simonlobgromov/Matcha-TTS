@@ -88,7 +88,80 @@ matcha-tts --text "<INPUT TEXT>" --steps 10
 
 # Train with your own dataset.
 
-The training dataset has 7016 samples and 13 hours of speech. All settings for training have already been made.
+## Dataset
+
+For training this model, it is suitable to organize data similar to [LJ Speech](https://keithito.com/LJ-Speech-Dataset/). Each audio file should be single-channel 16-bit PCM WAV with a sample rate of 22050 Hz. WAV files must have unique names, for example:
+
+```
+file_1.wav
+file_2.wav
+file_3.wav
+file_4.wav
+....
+file_12454.wav
+file_12455.wav
+```
+
+
+They should also be placed at the root of the project directory in a separate folder.
+
+Additionally, the project should include two `.txt` files for Train and Test with metadata for the files. The names of these files can be arbitrary, and their structure is as follows:
+```
+.../Matcha-TTS/<your folder name>/wavs/<filename>.wav|Баарыңарга салам, менин атым Акылай.
+.../Matcha-TTS/<your folder name>/wavs/<filename>.wav|Мен бардыгын бул жерде Инновация борборунда көргөнүмө абдан кубанычтамын.
+.../Matcha-TTS/<your folder name>/wavs/<filename>.wav|<your sentence>
+.../Matcha-TTS/<your folder name>/wavs/<filename>.wav|<your sentence>
+.../Matcha-TTS/<your folder name>/wavs/<filename>.wav|<your sentence>
+........
+```
+Where each line is the FULL path to the file located in the folder with the uploaded audio, and a sentence in its original form with punctuation is written after the delimiter '|'. 
+It is advisable to clean the text of unnecessary and unwanted characters beforehand. Be careful with abbreviations and contractions.
+The text preprocessing does not include functionality for processing abbreviations and contractions; however, the built-in phonemizer can transcribe numbers, but to avoid errors, it is better to write numbers in words.
+
+## Dataset from Hugging Face
+
+If you want to use a dataset that you store on Hugging Face, it would be convenient to use the `create-dataset` script, which will handle the downloading and all the data preparation, including .txt files with metadata.
+Here's what its structure might look like:
+
+```
+DatasetDict({
+    train: Dataset({
+        features: ['id', 'raw_transcription', 'transcription', 'sentence_type', 'speaker_id', 'gender', 'audio'],
+        num_rows: 7016
+    })
+    test: Dataset({
+        features: ['id', 'raw_transcription', 'transcription', 'sentence_type', 'speaker_id', 'gender', 'audio'],
+        num_rows: 31
+    })
+})
+```
+
+Where the most important and mandatory features are:
+```
+['raw_transcription', 'audio']
+```
+
+Where:
+
+`raw_transcription` - this is the text of your sentences in the original version (the requirements are the same as in the previous method).
+
+`audio` - these are audio files with metadata, which are dictionaries with keys:
+
+* `array` - audio in the form of a `numpy.ndarray` with a `float32` data type
+* `path` - file name
+* `sampling_rate` - Sampling rate, which should be no less than 22050 Hz.
+  
+Example a row:
+
+```
+{'array': array([-3.05175781e-05, -3.05175781e-05,  0.00000000e+00, ...,
+         0.00000000e+00,  0.00000000e+00,  0.00000000e+00]),
+ 'path': '1353.wav',
+ 'sampling_rate': 44100}
+```
+
+
+
 
 ## Process by Terminal
 
@@ -99,21 +172,23 @@ git clone https://github.com/simonlobgromov/Matcha-TTS
 cd Matcha-TTS
 pip install -e .
 ```
-!!!The environment will be restarted!!!
 
 Install this:
 
 ```
 apt-get install espeak-ng
 ```
-Connect to HF
+Connect to HF (Skip this step if you are not using data from Hugging Face.)
 
 ```
 git config --global credential.helper store
 huggingface-cli login
 ```
 
-* **Load the Data**
+* **Load the Data** (Skip this step if you are not using data from Hugging Face.)
+
+The script will automatically create a folder with audio recordings and text files with metadata. During the process, enter the HF repository name and the dataset name.
+  
 
 ```
 create-dataset
@@ -121,11 +196,43 @@ create-dataset
 # If you see a cat, then everything is fine!
 ```
 
+* Go to `configs/data/akylai<OR YOUR FILE NAME>.yaml` and change
+
+```yaml
+train_filelist_path: data/filelists/akylai_audio_text_train_filelist.txt # path to your TXT with metadata
+valid_filelist_path: data/filelists/akylai_audio_text_val_filelist.txt # path to your TXT with metadata
+```
+
+* Generate normalisation statistics with the yaml file of dataset configuration
+
+```bash
+matcha-data-stats -i akylai.yaml
+# Output:
+#{'mel_mean': -5.53662231756592, 'mel_std': 2.1161014277038574}
+```
+
+* Update these values in `configs/data/akylai.yaml` under `data_statistics` key.
+
+```bash
+data_statistics:  # Computed for akylai(or your) dataset
+  mel_mean: -5.536622
+  mel_std: 2.116101
+```
+
+
+
 * **Train**
 
 ```
 python matcha/train.py experiment=akylai
 ```
+
+OR
+
+```
+python matcha/train.py experiment=akylai trainer.devices=[0,1]
+```
+
 
 * **Checkpoints**
 
