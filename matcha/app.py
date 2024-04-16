@@ -127,7 +127,7 @@ def ljspeech_example_cacher(text, n_timesteps, mel_temp, length_scale, spk=-1):
 
 
 def main():
-    description = """# AkylAI TTS mini"""
+    description = """# AkylAI TTS Mini"""
 
     with gr.Blocks(title="AkylAI TTS") as demo:
         processed_text = gr.State(value=None)
@@ -138,7 +138,7 @@ def main():
                 gr.Markdown(description, scale=3)
             with gr.Row():
                 image_url = "https://github.com/simonlobgromov/Matcha-TTS/blob/main/photo_2024-04-07_15-59-52.png?raw=true"
-                gr.Image(image_url, label="Matcha-TTS logo", width=560, height=315)
+                gr.Image(image_url, label=None, width=660, height=315, show_label=False)
 
         with gr.Box():
             radio_options = list(RADIO_OPTIONS.keys())
@@ -149,7 +149,7 @@ def main():
             with gr.Row():
                 gr.Markdown("## Текстти кыргыз тилинде жазыңыз\n### Text Input")
             with gr.Row():
-                text = gr.Textbox(value="", label=None, scale=3)
+                text = gr.Textbox(value="", label=None, scale=3, show_label=False)
 
             with gr.Row():
                 gr.Markdown("## Сүйлөө ылдамдыгы\n### Speaking rate")
@@ -168,10 +168,11 @@ def main():
                 length_scale = gr.Slider(
                     label=None,
                     minimum=0.5,
-                    maximum=1.5,
+                    maximum=1,
                     step=0.05,
-                    value=1.0,
+                    value=0.9,
                     interactive=True,
+                    show_label=False
                 )
                 mel_temp = gr.Slider(
                     label="Sampling temperature",
