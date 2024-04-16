@@ -20,9 +20,26 @@
 
 
 
-# Matcha-TTS for Kyrgyz language
+# AkylAI-TTS for Kyrgyz language
 
-## Train with Kany Dataset
+We present to you a model trained in the Kyrgyz language, which has been trained on 13 hours of speech and 7,000 samples, complete with source code and training scripts. The architecture is based on Matcha-TTS.
+It`s a new approach to non-autoregressive neural TTS, that uses [conditional flow matching](https://arxiv.org/abs/2210.02747) (similar to [rectified flows](https://arxiv.org/abs/2209.03003)) to speed up ODE-based speech synthesis. Our method:
+
+- Is probabilistic
+- Has compact memory footprint
+- Sounds highly natural
+- Is very fast to synthesise from
+
+You can try our AkylAI TTS by visiting [SPACE](https://huggingface.co/spaces/the-cramer-project/akylai-tts-mini) and read [ICASSP 2024 paper](https://arxiv.org/abs/2309.03199) for more details.
+
+
+
+
+
+
+
+
+# Train with your own dataset.
 
 The training dataset has 7016 samples and 13 hours of speech. All settings for training have already been made.
 
