@@ -23,8 +23,10 @@ def remove_outer_quotes_regex(sen:str)->str:
   return re.sub(r'^["\'](.*)["\']$', r'\1', sen)
 
 def main()->None:
-  os.mkdir('kany_dataset')
-  os.chdir('kany_dataset')
+  name_dataset = input('Write HF dataset name as <REPO_NAME/DATASET_NAME>: ')
+  sub_name_dataset = name_dataset.split('/')[1]
+  os.mkdir(sub_name_dataset)
+  os.chdir(sub_name_dataset)
   os.mkdir('wavs')
   os.chdir('wavs')
 
@@ -39,7 +41,7 @@ def main()->None:
   print(art)
   
   print('--- LOADING DATASET ---')
-  dataset_kany = load_dataset("Simonlob/Kany_dataset_mk4")
+  your_dataset = load_dataset(name_dataset)
   
   # mk TRAIN
   print()
@@ -48,9 +50,9 @@ def main()->None:
   path = []
   text = []
 
-  with tqdm(total=len(dataset_kany['train']), leave=False) as pbar:
+  with tqdm(total=len(your_dataset['train']), leave=False) as pbar:
     for ind in range(num_shards):
-      dataset_shard = dataset_kany['train'].shard(num_shards=num_shards, index=ind)
+      dataset_shard = your_dataset['train'].shard(num_shards=num_shards, index=ind)
       for row in dataset_shard:
         load_audio(row['audio'])
         path.append(row['audio']['path'])
@@ -65,7 +67,7 @@ def main()->None:
   df = pd.DataFrame({'path':path, 'text':text})
   df.text = df.text.map(remove_outer_quotes_regex)
   df.path = dir + df.path
-  df.to_csv('kany_filelist_train.txt', sep='|', header=None, index=False)
+  df.to_csv(f'{sub_name_dataset}_filelist_train.txt', sep='|', header=None, index=False)
   
   # mk TEST
   os.chdir(dir)
@@ -73,8 +75,8 @@ def main()->None:
   text = []
   print()
   print('--- CONVERTIND AND SAVING THE TEST DATASET ---')
-  with tqdm(total=len(dataset_kany['test']), leave=False) as pbar2:
-    for row in tqdm(dataset_kany['test']):
+  with tqdm(total=len(your_dataset['test']), leave=False) as pbar2:
+    for row in tqdm(your_dataset['test']):
       load_audio(row['audio'])
       path.append(row['audio']['path'])
       text.append(row['raw_transcription'])
@@ -84,7 +86,7 @@ def main()->None:
   df = pd.DataFrame({'path':path, 'text':text})
   df.text = df.text.map(remove_outer_quotes_regex)
   df.path = dir + df.path
-  df.to_csv('kany_filelist_test.txt', sep='|', header=None, index=False)
+  df.to_csv(f'{sub_name_dataset}_filelist_test.txt', sep='|', header=None, index=False)
   print()
   print('--- THE DATASET IS READY ---')
   print(f'Dir of data is "{absolute_path}"')
