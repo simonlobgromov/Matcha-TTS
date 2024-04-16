@@ -2,9 +2,8 @@
 
 
 
-# 🍵 Matcha-TTS: A fast TTS architecture with conditional flow matching
+# AkylAI TTS
 
-### [Shivam Mehta](https://www.kth.se/profile/smehta), [Ruibo Tu](https://www.kth.se/profile/ruibo), [Jonas Beskow](https://www.kth.se/profile/beskow), [Éva Székely](https://www.kth.se/profile/szekely), and [Gustav Eje Henter](https://people.kth.se/~ghe/)
 
 [![python](https://img.shields.io/badge/-Python_3.10-blue?logo=python&logoColor=white)](https://www.python.org/downloads/release/python-3100/)
 [![pytorch](https://img.shields.io/badge/PyTorch_2.0+-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org/get-started/locally/)
@@ -14,7 +13,7 @@
 [![isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 
 <p style="text-align: center;">
-  <img src="https://shivammehta25.github.io/Matcha-TTS/images/logo.png" height="128"/>
+  <img src="https://github.com/simonlobgromov/Matcha-TTS/blob/main/photo_2024-04-07_15-59-52.png" height="400"/>
 </p>
 
 </div>
