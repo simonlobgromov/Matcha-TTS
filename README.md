@@ -238,3 +238,41 @@ python matcha/train.py experiment=akylai trainer.devices=[0,1]
 
 Checkpoints will be saved in `./Matcha-TTS/logs/train/<MODEL_NAME>/runs/<DATE>_<TIME>/checkpoints`. Unload them or select the last few checkpoints.
 
+
+
+# Credits
+
+
+- Shivam Mehta ([GitHub](https://github.com/shivammehta25))
+- The Cramer Project (Data collection and preprocessing)[Official Space](https://thecramer.com/)
+- Amantur Amatov (Expert)
+- Timur Turatali (Expert, Research)
+- Den Pavlov (Research, Data preprocessing and ML engineering) [GitHub](https://github.com/simonlobgromov/Matcha-TTS))
+- Ulan Abdurazakov (Environment Developer)
+- Nursultan Bakashov (CEO)
+
+## Citation information
+
+If you use our code or otherwise find this work useful, please cite our paper:
+
+```text
+@inproceedings{mehta2024matcha,
+  title={Matcha-{TTS}: A fast {TTS} architecture with conditional flow matching},
+  author={Mehta, Shivam and Tu, Ruibo and Beskow, Jonas and Sz{\'e}kely, {\'E}va and Henter, Gustav Eje},
+  booktitle={Proc. ICASSP},
+  year={2024}
+}
+```
+
+## Acknowledgements
+
+Since this code uses [Lightning-Hydra-Template](https://github.com/ashleve/lightning-hydra-template), you have all the powers that come with it.
+
+Other source code we would like to acknowledge:
+
+- [Coqui-TTS](https://github.com/coqui-ai/TTS/tree/dev): For helping me figure out how to make cython binaries pip installable and encouragement
+- [Hugging Face Diffusers](https://huggingface.co/): For their awesome diffusers library and its components
+- [Grad-TTS](https://github.com/huawei-noah/Speech-Backbones/tree/main/Grad-TTS): For the monotonic alignment search source code
+- [torchdyn](https://github.com/DiffEqML/torchdyn): Useful for trying other ODE solvers during research and development
+- [labml.ai](https://nn.labml.ai/transformers/rope/index.html): For the RoPE implementation
+
