@@ -127,30 +127,18 @@ def ljspeech_example_cacher(text, n_timesteps, mel_temp, length_scale, spk=-1):
 
 
 def main():
-    description = """# AkylAI TTS mini
-    We present to you a fast speech synthesis model in the Kyrgyz language.
-
-    
-    This is a new approach to non-autoregressive neural TTS that uses conditional stream matching (similar to rectified streams) to speed up ODE-based speech synthesis.
-    Method:
-
-    * Is probabilistic
-    * Has compact memory footprint
-    * Sounds highly natural
-    * Is very fast to synthesise from
-   
-    """
+    description = """# AkylAI TTS mini"""
 
     with gr.Blocks(title="AkylAI TTS") as demo:
         processed_text = gr.State(value=None)
         processed_text_len = gr.State(value=None)
 
         with gr.Box():
-          with gr.Row():
-              gr.Markdown(description, scale=3)
-              with gr.Column():
-                  image_url = "https://github.com/simonlobgromov/Matcha-TTS/blob/main/photo_2024-04-07_15-59-52.png?raw=true"
-                  gr.Image(image_url, label="Matcha-TTS logo", width=560, height=315)
+            with gr.Row():
+                gr.Markdown(description, scale=3)
+            with gr.Row():
+                image_url = "https://github.com/simonlobgromov/Matcha-TTS/blob/main/photo_2024-04-07_15-59-52.png?raw=true"
+                gr.Image(image_url, label="Matcha-TTS logo", width=560, height=315)
 
         with gr.Box():
             radio_options = list(RADIO_OPTIONS.keys())
@@ -161,7 +149,7 @@ def main():
             with gr.Row():
                 gr.Markdown("## Текстти кыргыз тилинде жазыңыз\n### Text Input")
             with gr.Row():
-                text = gr.Textbox(value="", lines=2, label=None, scale=3)
+                text = gr.Textbox(value="", label=None, scale=3)
 
             with gr.Row():
                 gr.Markdown("## Сүйлөө ылдамдыгы\n### Speaking rate")
@@ -197,15 +185,12 @@ def main():
 
                 synth_btn = gr.Button("БАШТОО | RUN")
 
-        with gr.Box():
-            with gr.Row():
-                gr.Markdown("## Фонетизацияланган текст\n### Phonetised text")
-            with gr.Row():
-                phonetised_text = gr.Textbox(interactive=False, scale=10, label=None)
+
+        phonetised_text = gr.Textbox(interactive=False, scale=10, label=None, visible=False )
 
         with gr.Box():
             with gr.Row():
-                mel_spectrogram = gr.Image(interactive=False, label="mel spectrogram")
+                mel_spectrogram = gr.Image(interactive=False, label="mel spectrogram", visible=False)
 
                 # with gr.Row():
                 audio = gr.Audio(interactive=False, label="Audio")
@@ -247,7 +232,7 @@ def main():
                 text,
             ],
             outputs=[phonetised_text, processed_text, processed_text_len],
-            api_name="matcha_tts",
+            api_name="AkylAI TTS Mini",
             queue=True,
         ).then(
             fn=synthesise_mel,
@@ -255,7 +240,7 @@ def main():
             outputs=[audio, mel_spectrogram],
         )
 
-        demo.queue().launch(share=True)
+        demo.queue().launch()
 
 
 if __name__ == "__main__":
