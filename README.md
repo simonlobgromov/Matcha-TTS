@@ -30,8 +30,55 @@ It`s a new approach to non-autoregressive neural TTS, that uses [conditional flo
 - Sounds highly natural
 - Is very fast to synthesise from
 
-You can try our AkylAI TTS by visiting [SPACE](https://huggingface.co/spaces/the-cramer-project/akylai-tts-mini) and read [ICASSP 2024 paper](https://arxiv.org/abs/2309.03199) for more details.
+You can try our *AkylAI TTS* by visiting [SPACE](https://huggingface.co/spaces/the-cramer-project/akylai-tts-mini) and read [ICASSP 2024 paper](https://arxiv.org/abs/2309.03199) for more details.
 
+# Inference
+
+## Run via terminal
+
+
+It is recommended to start by setting up a virtual environment using `venv`.
+
+1. Clone this repository and install all modules and dependencies by running the commands:
+
+```
+git clone https://github.com/simonlobgromov/Matcha-TTS
+cd Matcha-TTS
+pip install -e .
+apt-get install espeak-ng
+```
+
+
+2. Run with CLI arguments:
+
+- To synthesise from given text, run:
+
+```bash
+matcha-tts --text "<INPUT TEXT>"
+```
+
+- To synthesise from a file, run:
+
+```bash
+matcha-tts --file <PATH TO FILE>
+```
+- Speaking rate
+
+```bash
+matcha-tts --text "<INPUT TEXT>" --speaking_rate 1.0
+```
+
+- Sampling temperature
+
+```bash
+matcha-tts --text "<INPUT TEXT>" --temperature 0.667
+```
+
+- Euler ODE solver steps
+
+```bash
+matcha-tts --text "<INPUT TEXT>" --steps 10
+```
 
 
 
@@ -82,5 +129,5 @@ python matcha/train.py experiment=akylai
 
 * **Checkpoints**
 
-Checkpoints will be saved in `./Matcha-TTS/logs/train/akylai/runs/<DATE>_<TIME>/checkpoints`. Unload them or select the last few checkpoints.
+Checkpoints will be saved in `./Matcha-TTS/logs/train/<MODEL_NAME>/runs/<DATE>_<TIME>/checkpoints`. Unload them or select the last few checkpoints.
 
