@@ -33,6 +33,9 @@ MULTISPEAKER_MODEL = {
 
 SINGLESPEAKER_MODEL = {"akyl_ai": {"vocoder": "hifigan_T2_v1", "speaking_rate": 0.95, "spk": None}}
 
+text_len = []
+phonems_len = []
+synthesis_time = []
 
 def plot_spectrogram_to_numpy(spectrogram, filename):
     fig, ax = plt.subplots(figsize=(12, 3))
@@ -55,6 +58,8 @@ def process_text(i: int, text: str, device: torch.device):
     x_lengths = torch.tensor([x.shape[-1]], dtype=torch.long, device=device)
     x_phones = sequence_to_text(x.squeeze(0).tolist())
     print(f"[{i}] - Phonetised text: {x_phones[1::2]}")
+    text_len.append(len(text))
+    phonems_len.append(int(x_lengths[0]))
 
     return {"x_orig": text, "x": x, "x_lengths": x_lengths, "x_phones": x_phones}
 
@@ -289,6 +294,9 @@ def cli():
         unbatched_synthesis(args, device, model, vocoder, denoiser, texts, spk)
     else:
         batched_synthesis(args, device, model, vocoder, denoiser, texts, spk)
+    
+    report = np.array([text_len, phonems_len, synthesis_time]).T
+    np.save(f'{args.output_folder}/report.npy', report)
 
    
 
@@ -389,6 +397,7 @@ def unbatched_synthesis(args, device, model, vocoder, denoiser, texts, spk):
         print(f"Время выполнения: {round(t, 1)} секунд")
         total_rtf.append(output["rtf"])
         total_rtf_w.append(rtf_w)
+        synthesis_time.append(round(t, 1))
 
         location = save_to_folder(base_name, output, args.output_folder)
         print(f"[+] Waveform saved: {location}")
