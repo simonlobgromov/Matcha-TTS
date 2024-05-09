@@ -57,7 +57,7 @@ class Data:
 
     df_train = pd.DataFrame({'path':path, 'text':text})
     df_train.text = df_train.text.map(self.remove_outer_quotes_regex)
-    df_train.path = os.path.abspath('./') + df_train.path
+    df_train.path = os.path.abspath('./') + '/' + df_train.path
     
     # mk TEST
     path = []
@@ -73,7 +73,7 @@ class Data:
     
     df_test = pd.DataFrame({'path':path, 'text':text})
     df_test.text = df_test.text.map(self.remove_outer_quotes_regex)
-    df_test.path = os.path.abspath('./') + df_test.path
+    df_test.path = os.path.abspath('./') + '/' + df_test.path
     print(f'--- THE DATASET IS READY ---')
     
     absolute_path_home = os.path.abspath('../')
