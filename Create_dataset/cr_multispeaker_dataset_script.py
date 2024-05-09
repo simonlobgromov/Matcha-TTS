@@ -98,7 +98,7 @@ def main()->None:
   os.chdir('akylai_multi_dataset')
   print(_doc_, '\n')
 
-  num_spkr = int(input('Write NUM of speakers'))
+  num_spkr = int(input('Write NUM of speakers: '))
 
   if num_spkr > 1:
     data_dict = get_data_dict(num_spkr)
@@ -126,12 +126,26 @@ def main()->None:
     filelist_dict[sub_name_dataset] = Data(dataset_full_name)
     filelist_dict[sub_name_dataset].load_data()
 
-    # print(filelist_dict[sub_name_dataset].file_lists)
 
   df_train = pd.DataFrame(columns=['path', 'sp_id', 'text'])
   df_test = pd.DataFrame(columns=['path', 'sp_id', 'text'])
   for sp_id, repo_name in data_dict.items():
-    filelist_dict[repo_name.split('/')][-1]].file_lists
+    train = filelist_dict[repo_name.split('/')[-1]].file_lists[0]
+    test = filelist_dict[repo_name.split('/')[-1]].file_lists[1]
+    train['sp_id'] = sp_id
+    test['sp_id'] = sp_id
+    train = train[['path', 'sp_id', 'text']]
+    test = test[['path', 'sp_id', 'text']]
+    df_train = pd.concat([df_train, train], axis=0)
+    df_test = pd.concat([df_test, test], axis=0)
+
+  df_train.to_csv('akylai_mlspk_filelist_train.txt', sep='|', header=None, index=False)
+  df_test.to_csv('akylai_mlspk_filelist_test.txt', sep='|', header=None, index=False)
+
+  absolute_path_home = os.path.abspath('../')
+  os.chdir(absolute_path_home)
+
+  print(art)
     
 
 
