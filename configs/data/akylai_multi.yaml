@@ -1,5 +1,5 @@
 _target_: matcha.data.text_mel_datamodule.TextMelDataModule
-name: akylai
+name: akylai_multi
 train_filelist_path: ./akylai_multi_dataset/akylai_mlspk_filelist_train.txt
 valid_filelist_path: ./akylai_multi_dataset/akylai_mlspk_filelist_test.txt
 batch_size: 16
