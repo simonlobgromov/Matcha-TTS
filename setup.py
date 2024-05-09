@@ -39,7 +39,7 @@ setup(
             "matcha-tts=matcha.cli:cli",
             "matcha-tts-app=matcha.app:main",
             "create-dataset=Create_dataset.cr_dataset_script:main",
-            "create-multi_spkr-dataset=Create_dataset.cr_multispeaker_dataset_script.py:main"
+            "create-multi_spkr-dataset=Create_dataset.cr_multispeaker_dataset_script:main"
         ]
     },
     ext_modules=cythonize(exts, language_level=3),
