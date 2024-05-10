@@ -87,8 +87,8 @@ class Data:
 def get_data_dict(num_spkr:int)->dict:
   dict_ = {}
   # id : dataset_full_name
-  for i in range(1, num_spkr+1):
-    print(f'--- DATASET {i} / {num_spkr} ---')
+  for i in range(num_spkr):
+    print(f'--- DATASET {i+1} / {num_spkr} ---')
     dict_[i] = input('Write HF dataset name as <REPO_NAME/DATASET_NAME>: ')
   return dict_
 
