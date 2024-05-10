@@ -88,7 +88,7 @@ matcha-tts --text "<INPUT TEXT>" --steps 10
 
 # Train with your own dataset.
 
-The training dataset has 7016 samples and 13 hours of speech. All settings for training have already been made.
+# Single speaker mode
 
 ## Process by Terminal
 
@@ -125,6 +125,53 @@ create-dataset
 
 ```
 python matcha/train.py experiment=akylai
+```
+
+* **Checkpoints**
+
+Checkpoints will be saved in `./Matcha-TTS/logs/train/<MODEL_NAME>/runs/<DATE>_<TIME>/checkpoints`. Unload them or select the last few checkpoints.
+
+
+
+# Multi speaker mode
+
+## Process by Terminal
+
+* **Load this repo and connect to HF**
+
+```
+git clone https://github.com/simonlobgromov/Matcha-TTS
+cd Matcha-TTS
+pip install -e .
+```
+!!!The environment will be restarted!!!
+
+Install this:
+
+```
+sudo apt-get install espeak-ng
+```
+Connect to HF
+
+```
+git config --global credential.helper store
+huggingface-cli login
+```
+
+* **Load the Data**
+
+In the process, specify the number of speakers and for each speaker a REPO from HF!
+
+```
+create-multi_spkr-dataset
+
+# If you see a cat, then everything is fine!
+```
+
+* **Train**
+
+```
+python matcha/train.py experiment=akylai_multi
 ```
 
 * **Checkpoints**
