@@ -81,16 +81,23 @@ class Data:
 
     self.file_lists = df_train, df_test
 
-
-
-
 def get_data_dict(num_spkr:int)->dict:
   dict_ = {}
   # id : dataset_full_name
   for i in range(num_spkr):
     print(f'--- DATASET {i+1} / {num_spkr} ---')
-    dict_[i] = input('Write HF dataset name as <REPO_NAME/DATASET_NAME>: ')
-  return dict_
+    repo = input('Write HF dataset name as <REPO_NAME/DATASET_NAME>: ')
+    if len(repo) == 0:
+      print(f'### Speaker {i+1} not added ###')
+    elif '/' in repo:
+      dict_[i] = repo
+    else:
+      raise ValueError('Dataset name Must Be like as <REPO_NAME/DATASET_NAME>')
+
+  if len(dict_) > 0:
+    return dict_
+  else:
+    raise ValueError('There must be at least one speaker!')
 
 
 def main()->None:
