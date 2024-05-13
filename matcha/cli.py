@@ -19,7 +19,7 @@ from matcha.utils.utils import assert_model_downloaded, get_user_data_dir, inter
 
 MATCHA_URLS = {
     "akyl_ai": "https://github.com/simonlobgromov/AkylAI_Matcha_Checkpoint/releases/download/Matcha-TTS/checkpoint_epoch.499.ckpt",
-    "matcha_vctk": "https://github.com/shivammehta25/Matcha-TTS-checkpoints/releases/download/v1.0/matcha_vctk.ckpt",
+    "akylai_multi": "https://github.com/simonlobgromov/AkylAI_Matcha_Checkpoint/releases/download/two_speakers/checkpoint_epoch.489.ckpt",
 }
 
 VOCODER_URLS = {
@@ -28,7 +28,7 @@ VOCODER_URLS = {
 }
 
 MULTISPEAKER_MODEL = {
-    "matcha_vctk": {"vocoder": "hifigan_univ_v1", "speaking_rate": 0.85, "spk": 0, "spk_range": (0, 107)}
+    "akylai_multi": {"vocoder": "hifigan_univ_v1", "speaking_rate": 0.85, "spk": 0, "spk_range": (0, 107)}
 }
 
 SINGLESPEAKER_MODEL = {"akyl_ai": {"vocoder": "hifigan_T2_v1", "speaking_rate": 0.95, "spk": None}}
