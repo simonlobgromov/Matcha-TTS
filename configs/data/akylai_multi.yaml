@@ -3,7 +3,7 @@ name: akylai_multi
 train_filelist_path: ./akylai_multi_dataset/akylai_mlspk_filelist_train.txt
 valid_filelist_path: ./akylai_multi_dataset/akylai_mlspk_filelist_test.txt
 batch_size: 32
-num_workers: 10
+num_workers: 20
 pin_memory: True
 cleaners: [kyrgyz_cleaners]
 add_blank: True
