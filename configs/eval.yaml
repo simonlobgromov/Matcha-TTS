@@ -2,7 +2,7 @@
 
 defaults:
   - _self_
-  - data: akylai_multi # choose datamodule with `test_dataloader()` for evaluation
+  - data: akylai # choose datamodule with `test_dataloader()` for evaluation
   - model: matcha
   - logger: null
   - trainer: default
