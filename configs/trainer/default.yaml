@@ -2,10 +2,10 @@ _target_: lightning.pytorch.trainer.Trainer
 
 default_root_dir: ${paths.output_dir}
 
-max_epochs: 800
+max_epochs: 810
 
 accelerator: gpu
-devices: [1, 6]
+devices: [0, 1, 2, 3]
 
 # mixed precision for extra speed-up
 precision: 16-mixed
