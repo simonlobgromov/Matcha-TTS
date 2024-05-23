@@ -3,6 +3,7 @@ import torch
 import torch.multiprocessing as mp
 import pandas as pd
 from transformers import pipeline
+import argparse
 from tqdm import tqdm
 
 def worker(num_gpus: int, rank: int, model_name: str, file_dir: list, path_list, text_list):
@@ -22,8 +23,6 @@ def worker(num_gpus: int, rank: int, model_name: str, file_dir: list, path_list,
     text_list.extend(local_text_list)
 
 if __name__ == '__main__':
-    import argparse
-
     parser = argparse.ArgumentParser(description="Transcribe audio files using multiple GPUs.")
     parser.add_argument('dir_path', type=str, help='Directory path containing audio files')
     args = parser.parse_args()
@@ -35,7 +34,11 @@ if __name__ == '__main__':
     path_list = manager.list()
     text_list = manager.list()
 
-    mp.set_start_method('spawn')
+    # Проверка метода запуска
+    try:
+        mp.set_start_method('spawn')
+    except RuntimeError:
+        pass  # Метод запуска уже установлен
 
     model_name = "UlutSoftLLC/whisper-small-kyrgyz"
     num_gpus = torch.cuda.device_count()
@@ -53,4 +56,4 @@ if __name__ == '__main__':
 
     absolute_path_home = os.path.abspath('../')
     os.chdir(absolute_path_home)
-    pd.DataFrame({'path': list(path_list), 'text': list(text_list)}).to_csv('test_from_audio.csv', index=False)
+    pd.DataFrame({'path': list(path_list), 'text': list(text_list)}).to_csv('result.csv', index=False)
