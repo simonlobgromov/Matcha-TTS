@@ -34,11 +34,11 @@ if __name__ == '__main__':
     path_list = manager.list()
     text_list = manager.list()
 
-    # Проверка метода запуска
+
     try:
         mp.set_start_method('spawn')
     except RuntimeError:
-        pass  # Метод запуска уже установлен
+        pass  
 
     model_name = "UlutSoftLLC/whisper-small-kyrgyz"
     num_gpus = torch.cuda.device_count()
