@@ -49,6 +49,7 @@ huggingface_hub[cli]
 pandas==2.0.3
 numpy==1.25.2
 datasets==2.18.0
+transformers
 ipython==7.34.0
 librosa==0.10.1
 tqdm==4.66.2
