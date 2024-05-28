@@ -86,8 +86,8 @@ def tensor_to_wav_bytes(tensor_audio, sample_rate=22050): # Байтовый ф�
 
 
 device = torch.device("cpu")
-model_path = './checkpoints/checkpoint_epoch.499.ckpt'
-vocoder_path = './checkpoints/generator_v1'
+model_path = './checkpoints/checkpoint.ckpt'
+vocoder_path = './checkpoints/generator'
 model = load_matcha(model_path, device) 
 vocoder, denoiser = load_vocoder(vocoder_path, device) 
 
