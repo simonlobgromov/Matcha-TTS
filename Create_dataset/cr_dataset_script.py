@@ -57,7 +57,7 @@ def main()->None:
       for row in dataset_shard:
         load_audio(row['audio'])
         path.append(row['audio']['path'])
-        text.append(row['raw_transcription'])
+        text.append(row['sentences'])
         pbar.update(1)
 
   
@@ -80,7 +80,7 @@ def main()->None:
     for row in tqdm(your_dataset['test']):
       load_audio(row['audio'])
       path.append(row['audio']['path'])
-      text.append(row['raw_transcription'])
+      text.append(row['sentences'])
       pbar2.update(1)
   
   os.chdir(absolute_path)
