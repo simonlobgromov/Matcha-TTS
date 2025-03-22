@@ -12,10 +12,11 @@ import os
 
 def load_audio(audio_dict:dict)->None:
   target_sr = 22050
+  path_ = audio_dict['path'].split('/')[-1]
   audio_resampled = librosa.resample(np.array(audio_dict['array']),
                                      orig_sr=audio_dict['sampling_rate'],
                                      target_sr=target_sr)
-  scipy.io.wavfile.write(audio_dict['path'],
+  scipy.io.wavfile.write(path_,
                          rate=target_sr,
                          data=(audio_resampled* 32767).astype(np.int16))
 
