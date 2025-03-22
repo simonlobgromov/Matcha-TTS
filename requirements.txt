@@ -43,7 +43,7 @@ gdown
 wget
 seaborn
 piper_phonemize
-huggingface_hub[cli]
+huggingface_hub[cli]==0.23.0
 
 # ----- create dataset ---- #
 pandas==2.0.3
