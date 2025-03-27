@@ -2,7 +2,7 @@ _target_: matcha.data.text_mel_datamodule.TextMelDataModule
 name: akylai
 train_filelist_path: ./Kany_dataset_mk4_total_pretrain_2025_v_0.0/Kany_dataset_mk4_total_pretrain_2025_v_0.0_filelist_train.txt
 valid_filelist_path: ./Kany_dataset_mk4_total_pretrain_2025_v_0.0/Kany_dataset_mk4_total_pretrain_2025_v_0.0_filelist_test.txt
-batch_size: 32
+batch_size: 64
 num_workers: 2
 pin_memory: True
 cleaners: [kyrgyz_cleaners]
@@ -16,6 +16,6 @@ win_length: 1024
 f_min: 0
 f_max: 8000
 data_statistics:  # Computed for ljspeech dataset
-  mel_mean: -5.7687811851501465
-  mel_std: 2.813243865966797
+  mel_mean: -5.78883171081543
+  mel_std: 2.8314902782440186
 seed: ${seed}
