@@ -2,7 +2,7 @@ _target_: matcha.data.text_mel_datamodule.TextMelDataModule
 name: akylai
 train_filelist_path: ./Kany_dataset_mk4_total_pretrain_2025_v_0.0/Kany_dataset_mk4_total_pretrain_2025_v_0.0_filelist_train.txt
 valid_filelist_path: ./Kany_dataset_mk4_total_pretrain_2025_v_0.0/Kany_dataset_mk4_total_pretrain_2025_v_0.0_filelist_test.txt
-batch_size: 64
+batch_size: 32
 num_workers: 2
 pin_memory: True
 cleaners: [kyrgyz_cleaners]
