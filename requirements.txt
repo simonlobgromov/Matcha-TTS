@@ -31,6 +31,7 @@ matplotlib==3.8.3
 conformer==0.3.2
 diffusers==0.25.0
 wget
+gdown
 seaborn
 piper_phonemize
 huggingface_hub[cli]==0.23.0
