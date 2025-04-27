@@ -1,0 +1,8 @@
+audio_generation:
+  _target_: matcha.callbacks.audio_generation_callback.AudioGenerationCallback
+  test_texts: 
+    - "Саламатсызбы, мен Акылай деп аталам."
+    - "Кыргызстан - тоолуу өлкө."
+  vocoder_name: "hifigan_T2_v1"
+  every_n_epochs: 10
+  enabled: true 
