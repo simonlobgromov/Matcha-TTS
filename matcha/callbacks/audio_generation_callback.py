@@ -2,11 +2,12 @@ import os
 import torch
 from lightning.pytorch.callbacks import Callback
 from matcha.text import text_to_sequence
-from matcha.utils.utils import intersperse, plot_tensor
+from matcha.utils.utils import intersperse, plot_tensor, get_user_data_dir
 from matcha.hifigan.models import Generator as HiFiGAN
 from matcha.hifigan.env import AttrDict
 from matcha.hifigan.config import v1
-from matcha.cli import VOCODER_URLS, assert_model_downloaded, get_user_data_dir
+from matcha.cli import VOCODER_URLS
+import wget
 
 class AudioGenerationCallback(Callback):
     def __init__(self, test_texts, vocoder_name="hifigan_T2_v1", every_n_epochs=10, enabled=True):
@@ -29,7 +30,14 @@ class AudioGenerationCallback(Callback):
             location = os.path.join(get_user_data_dir(), f"{self.vocoder_name}")
             
             # Проверка и загрузка вокодера, если его нет
-            assert_model_downloaded(self.vocoder_name, VOCODER_URLS, location)
+            if not os.path.exists(location):
+                os.makedirs(os.path.dirname(location), exist_ok=True)
+                url = VOCODER_URLS.get(self.vocoder_name)
+                if url:
+                    print(f"Downloading vocoder from {url} to {location}")
+                    wget.download(url=url, out=location)
+                else:
+                    raise ValueError(f"Vocoder {self.vocoder_name} not found in VOCODER_URLS")
             
             # Инициализация вокодера
             h = AttrDict(v1)
