@@ -67,18 +67,36 @@ class AudioGenerationCallback(Callback):
                 output = pl_module.synthesise(x, x_lengths, n_timesteps=20)
                 
                 # Логгирование мел-спектрограммы
-                trainer.logger.experiment.add_image(
-                    f"test_text_mel/{i}",
-                    plot_tensor(output["decoder_outputs"].squeeze().cpu()),
-                    trainer.current_epoch,
-                    dataformats="HWC",
-                )
+                if hasattr(trainer.logger, "experiment") and hasattr(trainer.logger.experiment, "add_image"):
+                    # TensorBoard логгер
+                    trainer.logger.experiment.add_image(
+                        f"test_text_mel/{i}",
+                        plot_tensor(output["decoder_outputs"].squeeze().cpu()),
+                        trainer.current_epoch,
+                        dataformats="HWC",
+                    )
+                elif hasattr(trainer.logger, "experiment") and hasattr(trainer.logger.experiment, "log"):
+                    # WandB логгер
+                    import wandb
+                    trainer.logger.experiment.log({
+                        f"test_text_mel/{i}": wandb.Image(plot_tensor(output["decoder_outputs"].squeeze().cpu())),
+                        "epoch": trainer.current_epoch
+                    })
                 
                 # Генерация и логгирование аудио
                 waveform = self.vocoder(output["decoder_outputs"]).cpu().squeeze().numpy()
-                trainer.logger.experiment.add_audio(
-                    f"test_text_audio/{i}",
-                    waveform,
-                    trainer.current_epoch,
-                    sample_rate=22050,
-                ) 
+                if hasattr(trainer.logger, "experiment") and hasattr(trainer.logger.experiment, "add_audio"):
+                    # TensorBoard логгер
+                    trainer.logger.experiment.add_audio(
+                        f"test_text_audio/{i}",
+                        waveform,
+                        trainer.current_epoch,
+                        sample_rate=22050,
+                    )
+                elif hasattr(trainer.logger, "experiment") and hasattr(trainer.logger.experiment, "log"):
+                    # WandB логгер
+                    import wandb
+                    trainer.logger.experiment.log({
+                        f"test_text_audio/{i}": wandb.Audio(waveform, sample_rate=22050),
+                        "epoch": trainer.current_epoch
+                    }) 
