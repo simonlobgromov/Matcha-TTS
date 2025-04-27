@@ -45,7 +45,7 @@ train: True
 test: False
 
 # simply provide checkpoint path to resume training
-ckpt_path: null
+ckpt_path: "https://github.com/simonlobgromov/AkylAI_Matcha_Checkpoint/releases/download/LiveSpeech2025-v.1.0/checkpoint_epoch.399.ckpt"
 
 # seed for random number generators in pytorch, numpy and python.random
 seed: 1234
