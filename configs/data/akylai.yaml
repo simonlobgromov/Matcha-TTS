@@ -16,6 +16,6 @@ win_length: 1024
 f_min: 0
 f_max: 8000
 data_statistics:  # Computed for ljspeech dataset
-  mel_mean: -6.069849491119385
-  mel_std: 3.098721981048584
+  mel_mean: -6.180971622467041
+  mel_std: 3.1646218299865723
 seed: ${seed}
